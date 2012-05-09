@@ -1,0 +1,7 @@
+<ul>
+<%- @products.each do |p| %>
+	<li><%= p.name %></li>
+<%- end %>
+</ul>
+
+<%= link_to "new product", new_product_path %>
