@@ -1,6 +1,11 @@
 require 'spec_helper'
 
 describe ProductsController do
+  def create_product
+    product = Product.create(:name => "Rat")
+    return product
+  end
+  
   describe "GET index" do
     it "responds successfully" do
       get :index
@@ -43,4 +48,56 @@ describe ProductsController do
       Product.count.should eq(1)
     end
   end
+  
+  describe "GET show" do
+    it "responds successfully" do
+      get :show
+      response.should be_successful
+    end
+    
+    it "assigns the right product" do
+      product = create_product 
+      get :show, {:id => product.id}
+      assigns(:product).should eq product
+    end
+    
+    it "renders show template" do
+      product = create_product
+      get :show, {:id => product.id}
+      response.should render_template(:show)
+    end
+  end
+  
+  describe "GET edit" do
+    it "responds successfully" do
+      get :edit
+      response.should be_successful
+    end
+    
+    it "assigns the right product" do
+      product = create_product 
+      get :edit, {:id => product.id}
+      assigns(:product).should eq product
+    end
+  end
+  
+  describe "PUT update" do
+    it "updates the record" do
+      product = create_product
+      put :update, {:product => {"name" => "edited name"},
+          :id => product.id}
+      Product.find_by_name("edited name").should_not be_nil
+      response.should redirect_to(product_path)
+    end
+  end
+  
+  describe "DELETE destroy" do
+    it "removes the record" do
+      product = create_product
+      expect {
+        delete :destroy, { :id => product.id }
+      }.to change(Product, :count).by(-1)
+    end
+  end
+    
 end
